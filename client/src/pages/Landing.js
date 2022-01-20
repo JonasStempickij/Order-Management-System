@@ -11,7 +11,7 @@ export const Landing = () => {
       <div className='container page'>
         <div className='info'>
           <h1>
-            job <span>trackking</span> app
+            <span>JANIO</span> pirmas APP važiuojam
           </h1>
           <p>
             I'm baby man bun prism jianbing hell of truffaut. Adipisicing austin
