@@ -1,11 +1,11 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const Wrapper = styled.article`
   background: var(--white);
   border-radius: var(--borderRadius);
-  display: grid;
-  grid-template-rows: 1fr auto;
   box-shadow: var(--shadow-2);
+  display: grid;
+  grid-template-rows: 150px auto;
 
   header {
     padding: 1rem 1.5rem;
@@ -24,10 +24,9 @@ const Wrapper = styled.article`
     place-items: center;
     background: var(--primary-500);
     border-radius: var(--borderRadius);
+    color: var(--white);
     font-size: 1.5rem;
     font-weight: 700;
-    text-transform: uppercase;
-    color: var(--white);
     margin-right: 2rem;
   }
   .info {
@@ -36,70 +35,41 @@ const Wrapper = styled.article`
     }
     p {
       margin: 0;
-      text-transform: capitalize;
-      color: var(--grey-400);
-      letter-spacing: var(--letterSpacing);
+      color: var(--grey-500);
     }
   }
-  .pending {
-    background: #fcefc7;
-    color: #e9b949;
-  }
-  .interview {
-    background: #e0e8f9;
-    color: #647acb;
-  }
-  .declined {
-    color: #d66a6a;
-    background: #ffeeee;
-  }
   .content {
+    display: grid;
     padding: 1rem 1.5rem;
   }
   .content-center {
-    display: grid;
-    grid-template-columns: 1fr;
-    row-gap: 0.5rem;
-    @media (min-width: 576px) {
-      grid-template-columns: 1fr 1fr;
+    p {
+      /* margin: 0; */
+      text-align: center;
     }
-    @media (min-width: 992px) {
-      grid-template-columns: 1fr;
-    }
-    @media (min-width: 1120px) {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  .status {
-    border-radius: var(--borderRadius);
-    text-transform: capitalize;
-    letter-spacing: var(--letterSpacing);
-    text-align: center;
-    width: 100px;
-    height: 30px;
   }
   footer {
-    margin-top: 1rem;
+    align-self: end;
+    margin-bottom: 1rem;
   }
-  .edit-btn,
-  .delete-btn {
-    letter-spacing: var(--letterSpacing);
-    cursor: pointer;
-    height: 30px;
+  .more-btn {
+    color: var(--white);
+    background: var(--primary-500);
+    margin-right: 0.5rem;
+    grid-column-start: 1;
   }
   .edit-btn {
     color: var(--green-dark);
     background: var(--green-light);
     margin-right: 0.5rem;
+    grid-column-start: 2;
+    text-align: center;
   }
   .delete-btn {
     color: var(--red-dark);
     background: var(--red-light);
+    grid-column-start: 3;
   }
-  &:hover .actions {
-    visibility: visible;
-  }
-`
+`;
 
-export default Wrapper
+export default Wrapper;

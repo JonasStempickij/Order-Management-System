@@ -10,17 +10,16 @@ const Profile = () => {
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
   const [lastName, setLastName] = useState(user?.lastName);
-  const [location, setLocation] = useState(user?.location);
 
   const handleSubmit = (e) => {
     // remove while testing
     e.preventDefault();
-    if (!name || !email || !lastName || !location) {
+    if (!name || !email || !lastName) {
       displayAlert();
       return;
     }
     // console.log('update user');
-    updateUser({ name, email, location, lastName });
+    updateUser({ name, email, lastName });
   };
 
   return (
@@ -47,12 +46,6 @@ const Profile = () => {
             name='email'
             value={email}
             handleChange={(e) => setEmail(e.target.value)}
-          />
-          <FormRow
-            type='text'
-            name='location'
-            value={location}
-            handleChange={(e) => setLocation(e.target.value)}
           />
           <button className='btn btn-block' type='submit' disabled={isLoading}>
             {isLoading ? 'Please Wait...' : 'Save Changes'}

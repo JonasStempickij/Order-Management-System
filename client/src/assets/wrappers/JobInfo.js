@@ -1,22 +1,20 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  margin-top: 0.5rem;
-  display: flex;
-  align-items: center;
-
-  .icon {
-    font-size: 1rem;
-    margin-right: 1rem;
-    display: flex;
-    align-items: center;
-    svg {
-      color: var(--grey-400);
+  ol {
+    padding-left: 1rem;
+  }
+  .hide {
+    li:nth-child(n + 4) {
+      display: none;
     }
   }
-  .text {
-    text-transform: capitalize;
-    letter-spacing: var(--letterSpacing);
+  li {
+    border-bottom: 1px solid var(--grey-100);
   }
-`
-export default Wrapper
+  .position-material {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+`;
+export default Wrapper;

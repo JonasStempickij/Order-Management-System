@@ -7,23 +7,22 @@ const AddJob = () => {
     isLoading,
     showAlert,
     displayAlert,
-    position,
     company,
-    jobLocation,
-    jobType,
-    jobTypeOptions,
-    status,
-    statusOptions,
     isEditing,
     handleChange,
+    handleSelectChange,
+    handleSelectAdd,
+    handleInputChange,
     clearValues,
     createJob,
     editJob,
+    jobPositions,
+    uploadFile,
   } = useAppContext();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!position || !company || !jobLocation) {
+    if (!company) {
       displayAlert();
       return;
     }
@@ -40,67 +39,106 @@ const AddJob = () => {
     handleChange({ name, value });
   };
 
+  const handleSelectJobInput = (e, index) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    handleSelectChange({ name, value, index });
+  };
+
+  const handleJobPositionsInput = (e, index) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    handleInputChange({ name, value, index });
+  };
+
+  const handleUpload = (e) => {
+    e.preventDefault();
+    const fileToUpload = e.target.files[0];
+    uploadFile(fileToUpload);
+  };
+
   return (
     <Wrapper>
       <form className='form'>
         <h3>{isEditing ? 'edit job' : 'add job'}</h3>
         {showAlert && <Alert />}
         <div className='form-center'>
-          {/* Position */}
-          <FormRow
-            type='text'
-            name='position'
-            value={position}
-            handleChange={handleJobInput}
-          />
           {/* Company */}
           <FormRow
+            style={{ background: 'red' }}
             type='text'
             name='company'
             value={company}
             handleChange={handleJobInput}
           />
-          {/* Location */}
-          <FormRow
-            labelText='job location'
-            type='text'
-            name='jobLocation'
-            value={jobLocation}
-            handleChange={handleJobInput}
-          />
-          {/* job type */}
-          <FormRowSelect
-            name='status'
-            value={status}
-            handleChange={handleJobInput}
-            list={statusOptions}
-          />
-          {/* job status */}
-          <FormRowSelect
-            name='jobType'
-            labelText='job type'
-            value={jobType}
-            handleChange={handleJobInput}
-            list={jobTypeOptions}
-          />
-          {/* btn container */}
-          <button
-            type='submit'
-            className='btn btn-block submit-btn'
-            onClick={handleSubmit}
-            disabled={isLoading}
-          >
-            submit
-          </button>
-          <button
-            className='btn btn-block clear-btn'
-            onClick={(e) => {
-              e.preventDefault();
-              clearValues();
-            }}
-          >
-            clear
-          </button>
+          {jobPositions.map((item, index) => {
+            return (
+              <div className='position' key={index}>
+                <FormRow
+                  labelText='Position name'
+                  name='positionName'
+                  value={item.positionName}
+                  handleChange={handleJobPositionsInput}
+                  type='text'
+                  index={index}
+                ></FormRow>
+                <FormRowSelect
+                  name='material'
+                  value={item.material}
+                  list={item.materialOptions}
+                  handleChange={handleSelectJobInput}
+                  index={index}
+                />
+                <FormRow
+                  labelText='Thickness'
+                  name='materialThickness'
+                  value={item.materialThickness}
+                  handleChange={handleJobPositionsInput}
+                  type='number'
+                  index={index}
+                />
+                <FormRow
+                  labelText='Quantity'
+                  name='positionQuantity'
+                  value={item.positionQuantity}
+                  handleChange={handleJobPositionsInput}
+                  type='number'
+                  index={index}
+                />
+              </div>
+            );
+          })}
+
+          <div className='btn-container'>
+            <button
+              type='button'
+              className='btn btn-block add-btn'
+              onClick={handleSelectAdd}
+            >
+              Add
+            </button>
+            <button
+              type='submit'
+              className='btn btn-block submit-btn'
+              onClick={handleSubmit}
+              disabled={isLoading}
+            >
+              submit
+            </button>
+            <button
+              className='btn btn-block clear-btn'
+              onClick={(e) => {
+                e.preventDefault();
+                clearValues();
+              }}
+            >
+              clear
+            </button>
+            <input type='file' name='fileUpload' onChange={handleUpload} />
+            <button className='btn btn-block' onClick={handleUpload}>
+              UPLOAD
+            </button>
+          </div>
         </div>
       </form>
     </Wrapper>

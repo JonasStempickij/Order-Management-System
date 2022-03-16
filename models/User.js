@@ -32,12 +32,6 @@ const UserSchema = new mongoose.Schema({
     maxLength: 20,
     default: 'Smith',
   },
-  location: {
-    type: String,
-    trim: true,
-    maxLength: 20,
-    default: 'my city',
-  },
 });
 
 UserSchema.pre('save', async function () {

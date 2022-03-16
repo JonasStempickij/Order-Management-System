@@ -1,20 +1,12 @@
 import moment from 'moment';
+import { useState } from 'react';
 import { FaLocationArrow, FaBriefcase, FaCalendarAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useAppContext } from '../context/appContext';
 import Wrapper from '../assets/wrappers/Job';
 import JobInfo from './JobInfo';
 
-const Job = ({
-  company,
-  createdAt,
-  _id,
-  position,
-  jobLocation,
-  jobType,
-
-  status,
-}) => {
+const Job = ({ company, createdAt, _id, jobPositions }) => {
   const { setEditJob, deleteJob } = useAppContext();
 
   let date = moment(createdAt);
@@ -25,19 +17,21 @@ const Job = ({
       <header>
         <div className='main-icon'>{company.charAt(0)}</div>
         <div className='info'>
-          <h5>{position}</h5>
-          <p>{company}</p>
+          <h5>{company}</h5>
+          <p>22-01-01-001</p>
         </div>
       </header>
       <div className='content'>
         <div className='content-center'>
-          <JobInfo icon={<FaLocationArrow />} text={jobLocation} />
-          <JobInfo icon={<FaCalendarAlt />} text={date} />
-          <JobInfo icon={<FaBriefcase />} text={jobType} />
-          <div className={`status ${status}`}>{status}</div>
+          <JobInfo jobPositions={jobPositions}> </JobInfo>
+          {jobPositions.length > 3 && <p>More positions</p>}
         </div>
+
         <footer>
           <div className='actions'>
+            {jobPositions.length > 3 && (
+              <button className='btn more-btn'>Details</button>
+            )}
             <Link
               to='/add-job'
               className='btn edit-btn'

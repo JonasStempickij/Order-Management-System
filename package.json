@@ -1,7 +1,7 @@
 {
-  "name": "jobify",
+  "name": "Unipuras OMS",
   "version": "1.0.0",
-  "description": "Project in Action - [Jobify](https://www.jobify.live/)",
+  "description": "Order managment system",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -22,6 +22,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "express-async-errors": "^3.1.1",
+    "express-fileupload": "^1.3.1",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.1.0",
     "helmet": "^5.0.1",

@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const Wrapper = styled.section`
   border-radius: var(--borderRadius);
@@ -14,55 +14,41 @@ const Wrapper = styled.section`
     border-radius: 0;
     box-shadow: none;
     padding: 0;
-    max-width: 100%;
+    max-width: 100%;~
     width: 100%;
+  }
+  .position {
+    display:grid;
+    grid-template-columns: 1fr auto auto auto;
+    grid-column-gap: 10px
   }
   .form-row {
     margin-bottom: 0;
   }
   .form-center {
     display: grid;
-    row-gap: 0.5rem;
-  }
-  .form-center button {
-    align-self: end;
-    height: 35px;
-    margin-top: 1rem;
+    
   }
   .btn-container {
+    margin-top: 1rem;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 1rem;
-    align-self: flex-end;
-    margin-top: 0.5rem;
-    button {
-      height: 35px;
-    }
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 5rem
   }
   .clear-btn {
-    background: var(--grey-500);
+    background: var(--grey-400);
   }
   .clear-btn:hover {
     background: var(--black);
   }
-  @media (min-width: 992px) {
-    .form-center {
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      column-gap: 1rem;
-    }
-    .btn-container {
-      margin-top: 0;
-    }
+  .submit-btn {
+    background: var(--green-light);
+    color: var(--green-dark);
   }
-  @media (min-width: 1120px) {
-    .form-center {
-      grid-template-columns: 1fr 1fr 1fr;
-    }
-    .form-center button {
-      margin-top: 0;
-    }
+  .submit-btn:hover {
+    background: var(--green-dark);
+    color: var(--white);
   }
-`
+`;
 
-export default Wrapper
+export default Wrapper;

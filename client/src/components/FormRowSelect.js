@@ -1,13 +1,20 @@
-const FormRowSelect = ({ labelText, name, value, handleChange, list }) => {
+const FormRowSelect = ({
+  labelText,
+  name,
+  value,
+  handleChange,
+  list,
+  index,
+}) => {
   return (
-    <div className='form-row'>
+    <div className='form-row-select'>
       <label htmlFor={name} className='form-label'>
         {labelText || name}
       </label>
       <select
         name={name}
         value={value}
-        onChange={handleChange}
+        onChange={(e) => handleChange(e, index)}
         className='form-select'
       >
         {list.map((itemValue, index) => {

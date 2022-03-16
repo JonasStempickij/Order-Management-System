@@ -1,5 +1,6 @@
 import express from 'express';
 const app = express();
+import fileUpload from 'express-fileupload';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -20,6 +21,7 @@ import connectDB from './db/connect.js';
 // routers
 import authRouter from './routes/authRoutes.js';
 import jobsRouter from './routes/jobsRoutes.js';
+import fileRouter from './routes/fileRoutes.js';
 
 //  middleware
 import notFoundMiddleware from './middleware/not-found.js';
@@ -34,11 +36,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.use(express.static(path.resolve(__dirname, './client/build')));
 app.use(express.json());
+app.use(fileUpload());
 app.use(helmet());
 app.use(xss());
 app.use(mongoSanitize());
 
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/upload', fileRouter);
 app.use('/api/v1/jobs', autheticateUser, jobsRouter);
 
 app.get('*', function (request, response) {

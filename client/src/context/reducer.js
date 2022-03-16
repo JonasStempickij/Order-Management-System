@@ -28,6 +28,10 @@ import {
   SHOW_STATS_SUCCESS,
   CLEAR_FILTERS,
   CHANGE_PAGE,
+  HANDLE_SELECT_CHANGE,
+  HANDLE_SELECT_ADD,
+  HANDLE_INPUT_CHANGE,
+  UPLOAD_FILE,
 } from './actions';
 
 import { initialState } from './appContext';
@@ -58,8 +62,6 @@ const reducer = (state, action) => {
       isLoading: false,
       token: action.payload.token,
       user: action.payload.user,
-      userLocation: action.payload.location,
-      jobLocation: action.payload.location,
       showAlert: true,
       alertType: 'success',
       alertText: 'User Created! Redirecting...',
@@ -83,8 +85,6 @@ const reducer = (state, action) => {
       isLoading: false,
       token: action.payload.token,
       user: action.payload.user,
-      userLocation: action.payload.location,
-      jobLocation: action.payload.location,
       showAlert: true,
       alertType: 'success',
       alertText: 'Login Successful! Redirecting...',
@@ -109,8 +109,6 @@ const reducer = (state, action) => {
       isLoading: false,
       token: action.payload.token,
       user: action.payload.user,
-      userLocation: action.payload.location,
-      jobLocation: action.payload.location,
       showAlert: true,
       alertType: 'success',
       alertText: 'User Profile Updated!',
@@ -132,19 +130,73 @@ const reducer = (state, action) => {
       [action.payload.name]: action.payload.value,
     };
   }
+  if (action.type === HANDLE_SELECT_CHANGE) {
+    // console.log(action.payload);
+    const newArray = [...state.jobPositions];
+    newArray[action.payload.index].material = action.payload.value;
+    return {
+      ...state,
+      jobPositions: newArray,
+    };
+  }
+
+  if (action.type === HANDLE_INPUT_CHANGE) {
+    const newArray = [...state.jobPositions];
+    if (action.payload.name === 'materialThickness') {
+      newArray[action.payload.index].materialThickness = action.payload.value;
+    }
+    if (action.payload.name === 'positionName') {
+      newArray[action.payload.index].positionName = action.payload.value;
+    }
+    if (action.payload.name === 'positionQuantity') {
+      newArray[action.payload.index].positionQuantity = action.payload.value;
+    }
+
+    return {
+      ...state,
+      jobPositions: newArray,
+    };
+  }
+
+  if (action.type === HANDLE_SELECT_ADD) {
+    return {
+      ...state,
+      jobPositions: [
+        ...state.jobPositions,
+        { material: 'AISI304', materialOptions: initialState.materialOptions },
+      ],
+    };
+  }
   if (action.type === CLEAR_VALUES) {
     const initialState = {
       isEditing: false,
       editJobId: '',
-      position: '',
       company: '',
-      jobLocation: state.userLocation,
-      jobType: 'full-time',
-      status: 'pending',
+      jobPositions: [
+        {
+          positionName: '',
+          material: 'AISI304',
+          materialOptions: [
+            'AISI304',
+            'AISI316',
+            'AISI430',
+            'Juodas pl.',
+            'Aliuminis',
+          ],
+        },
+      ],
+      positionFile: null,
     };
     return {
       ...state,
       ...initialState,
+    };
+  }
+
+  if (action.type === UPLOAD_FILE) {
+    return {
+      ...state,
+      file: action.payload.file,
     };
   }
 
@@ -184,16 +236,13 @@ const reducer = (state, action) => {
 
   if (action.type === SET_EDIT_JOB) {
     const job = state.jobs.find((job) => job._id === action.payload.id);
-    const { _id, position, company, jobLocation, jobType, status } = job;
+    const { _id, company, jobPositions } = job;
     return {
       ...state,
       isEditing: true,
       editJobId: _id,
-      position,
       company,
-      jobLocation,
-      jobType,
-      status,
+      jobPositions,
     };
   }
 
@@ -205,8 +254,6 @@ const reducer = (state, action) => {
       ...initialState,
       user: null,
       token: null,
-      userLocation: '',
-      jobLocation: '',
     };
   }
   if (action.type === DELETE_JOB_BEGIN) {

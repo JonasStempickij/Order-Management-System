@@ -33,11 +33,15 @@ import {
   SHOW_STATS_SUCCESS,
   CLEAR_FILTERS,
   CHANGE_PAGE,
+  HANDLE_SELECT_CHANGE,
+  HANDLE_SELECT_ADD,
+  HANDLE_INPUT_CHANGE,
+  UPLOAD_FILE,
 } from './actions';
+import { MdProductionQuantityLimits } from 'react-icons/md';
 
 const token = localStorage.getItem('token');
 const user = localStorage.getItem('user');
-const userLocation = localStorage.getItem('location');
 
 const initialState = {
   isLoading: false,
@@ -46,17 +50,10 @@ const initialState = {
   alertType: '',
   user: user ? JSON.parse(user) : null,
   token: token,
-  userLocation: userLocation || '',
   showSidebar: false,
   isEditing: false,
   editJobId: '',
-  position: '',
   company: '',
-  jobLocation: userLocation || '',
-  jobTypeOptions: ['full-time', 'part-time', 'remote', 'internship'],
-  jobType: 'full-time',
-  statusOptions: ['pending', 'interview', 'declined'],
-  status: 'pending',
   jobs: [],
   totalJobs: 0,
   numOfPages: 1,
@@ -64,10 +61,27 @@ const initialState = {
   stats: {},
   monthlyApplications: [],
   search: '',
-  searchStatus: 'all',
-  searchType: 'all',
-  sort: 'latest',
-  sortOptions: ['latest', 'oldest', 'a-z', 'z-a'],
+  jobPositions: [
+    {
+      positionName: '',
+      material: 'AISI304',
+      materialOptions: [
+        'AISI304',
+        'AISI316',
+        'AISI430',
+        'Juodas pl.',
+        'Aliuminis',
+      ],
+      materialThickness: '',
+      positionQuantity: '',
+    },
+  ],
+  material: 'AISI304',
+  materialOptions: ['AISI304', 'AISI316', 'AISI430', 'Juodas pl.', 'Aliuminis'],
+  materialThickness: '',
+  positionQuantity: '',
+  positionFile: null,
+  jobComment: '',
 };
 
 const AppContext = React.createContext();
@@ -120,12 +134,12 @@ const AppProvider = ({ children }) => {
     try {
       const response = await axios.post('/api/v1/auth/register', currentUser);
       // console.log(response);
-      const { user, token, location } = response.data;
+      const { user, token } = response.data;
       dispatch({
         type: REGISTER_USER_SUCCESS,
-        payload: { user, token, location },
+        payload: { user, token },
       });
-      addUserToLocalStorage({ user, token, location });
+      addUserToLocalStorage({ user, token });
     } catch (error) {
       console.log(error.response);
       dispatch({
@@ -140,12 +154,12 @@ const AppProvider = ({ children }) => {
     dispatch({ type: LOGIN_USER_BEGIN });
     try {
       const { data } = await axios.post('/api/v1/auth/login', currentUser);
-      const { user, token, location } = data;
+      const { user, token } = data;
       dispatch({
         type: LOGIN_USER_SUCCESS,
-        payload: { user, token, location },
+        payload: { user, token },
       });
-      addUserToLocalStorage({ user, token, location });
+      addUserToLocalStorage({ user, token });
     } catch (error) {
       dispatch({
         type: LOGIN_USER_ERROR,
@@ -165,13 +179,13 @@ const AppProvider = ({ children }) => {
     try {
       const { data } = await authFetch.patch('auth/updateUser', currentUser);
 
-      const { user, token, location } = data;
+      const { user, token } = data;
 
       dispatch({
         type: UPDATE_USER_SUCCESS,
-        payload: { user, location, token },
+        payload: { user, token },
       });
-      addUserToLocalStorage({ user, location, token });
+      addUserToLocalStorage({ user, token });
     } catch (error) {
       if (error.response.status !== 401) {
         dispatch({
@@ -187,21 +201,43 @@ const AppProvider = ({ children }) => {
     dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
   };
 
+  const handleSelectChange = ({ name, value, index }) => {
+    dispatch({ type: HANDLE_SELECT_CHANGE, payload: { name, value, index } });
+  };
+
+  const handleSelectAdd = () => {
+    dispatch({ type: HANDLE_SELECT_ADD });
+  };
+
+  const handleInputChange = ({ name, value, index }) => {
+    dispatch({ type: HANDLE_INPUT_CHANGE, payload: { name, value, index } });
+  };
+
   const clearValues = () => {
     dispatch({ type: CLEAR_VALUES });
+  };
+
+  const uploadFile = async (file) => {
+    // dispatch({ type: UPLOAD_FILE });
+    try {
+      console.log(file);
+      const formData = new FormData();
+      formData.append('myFile', file);
+      await authFetch.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const createJob = async () => {
     dispatch({ type: CREATE_JOB_BEGIN });
     try {
-      const { position, company, jobLocation, jobType, status } = state;
-      await authFetch.post('/jobs', {
-        position,
-        company,
-        jobLocation,
-        jobType,
-        status,
-      });
+      const { company, jobPositions } = state;
+      await authFetch.post('/jobs', { company, jobPositions });
       dispatch({ type: CREATE_JOB_SUCCESS });
       clearValues();
     } catch (error) {
@@ -244,13 +280,10 @@ const AppProvider = ({ children }) => {
   const editJob = async () => {
     dispatch({ type: EDIT_JOB_BEGIN });
     try {
-      const { position, company, jobLocation, jobType, status } = state;
+      const { company, jobPositions } = state;
       await authFetch.patch(`/jobs/${state.editJobId}`, {
         company,
-        position,
-        jobLocation,
-        jobType,
-        status,
+        jobPositions,
       });
       dispatch({ type: EDIT_JOB_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
@@ -300,13 +333,11 @@ const AppProvider = ({ children }) => {
   const addUserToLocalStorage = ({ user, token, location }) => {
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('token', token);
-    localStorage.setItem('location', location);
   };
 
   const removeUserFromLocalStorage = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    localStorage.removeItem('location');
   };
 
   const clearFilters = () => {
@@ -337,6 +368,10 @@ const AppProvider = ({ children }) => {
         showStats,
         clearFilters,
         changePage,
+        handleSelectChange,
+        handleSelectAdd,
+        handleInputChange,
+        uploadFile,
       }}
     >
       {children}

@@ -1,9 +1,9 @@
-import logo from "../assets/images/logo.svg";
+import logo from '../assets/images/logo.svg';
 
 const Logo = () => {
   return (
     <nav>
-      <img src={logo} alt="jobify" className="logo" />
+      <img src={logo} alt='Unipuras OMS' className='logo' />
     </nav>
   );
 };

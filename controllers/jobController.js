@@ -6,11 +6,14 @@ import mongoose from 'mongoose';
 import moment from 'moment';
 
 const createJob = async (req, res) => {
-  const { position, company } = req.body;
+  console.log(req.body);
+  const { company } = req.body;
 
-  if (!position || !company) {
+  if (!company) {
     throw new BadRequestError('Please provide all values');
   }
+  console.log(req.headers);
+  console.log(typeof req.body.jobPositions);
   req.body.createdBy = req.user.userId;
   const job = await Job.create(req.body);
   res.status(StatusCodes.CREATED).json(job);
@@ -32,6 +35,7 @@ const deleteJob = async (req, res) => {
 
 const getAllJobs = async (req, res) => {
   const { status, jobType, sort, search } = req.query;
+
   const queryObject = {
     createdBy: req.user.userId,
   };
@@ -48,7 +52,7 @@ const getAllJobs = async (req, res) => {
   }
 
   // NO AWAIT
-  console.log(queryObject);
+  // console.log(queryObject);
   let result = Job.find(queryObject);
 
   // chain sort conditions
@@ -80,8 +84,9 @@ const getAllJobs = async (req, res) => {
 
 const updateJob = async (req, res) => {
   const { id: jobId } = req.params;
-  const { company, position } = req.body;
-  if (!position || !company) {
+  const { company, jobPositions } = req.body;
+  console.log(typeof req.body.positionFile);
+  if (!jobPositions || !company) {
     throw new BadRequestError('Please provide all values');
   }
   const job = await Job.findOne({ _id: jobId });
