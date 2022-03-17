@@ -18,6 +18,7 @@ const AddJob = () => {
     editJob,
     jobPositions,
     uploadFile,
+    uploadChange,
   } = useAppContext();
 
   const handleSubmit = (e) => {
@@ -53,8 +54,7 @@ const AddJob = () => {
 
   const handleUpload = (e) => {
     e.preventDefault();
-    const fileToUpload = e.target.files[0];
-    uploadFile(fileToUpload);
+    uploadFile();
   };
 
   return (
@@ -134,7 +134,16 @@ const AddJob = () => {
             >
               clear
             </button>
-            <input type='file' name='fileUpload' onChange={handleUpload} />
+          </div>
+          <div className='btn-container'>
+            <input
+              className='file-upload'
+              type='file'
+              name='fileUpload'
+              onChange={(e) => {
+                uploadChange(e);
+              }}
+            />
             <button className='btn btn-block' onClick={handleUpload}>
               UPLOAD
             </button>

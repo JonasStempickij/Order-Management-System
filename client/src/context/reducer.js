@@ -32,6 +32,7 @@ import {
   HANDLE_SELECT_ADD,
   HANDLE_INPUT_CHANGE,
   UPLOAD_FILE,
+  UPLOAD_CHANGE,
 } from './actions';
 
 import { initialState } from './appContext';
@@ -196,7 +197,14 @@ const reducer = (state, action) => {
   if (action.type === UPLOAD_FILE) {
     return {
       ...state,
-      file: action.payload.file,
+      positionFile: action.payload.file,
+    };
+  }
+
+  if (action.type === UPLOAD_CHANGE) {
+    return {
+      ...state,
+      positionFile: action.payload.file,
     };
   }
 

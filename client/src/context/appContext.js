@@ -37,6 +37,7 @@ import {
   HANDLE_SELECT_ADD,
   HANDLE_INPUT_CHANGE,
   UPLOAD_FILE,
+  UPLOAD_CHANGE,
 } from './actions';
 import { MdProductionQuantityLimits } from 'react-icons/md';
 
@@ -217,12 +218,18 @@ const AppProvider = ({ children }) => {
     dispatch({ type: CLEAR_VALUES });
   };
 
-  const uploadFile = async (file) => {
+  const uploadChange = (e) => {
+    // console.log(e.target.files[0]);
+    const file = e.target.files[0];
+    dispatch({ type: UPLOAD_CHANGE, payload: { file } });
+  };
+
+  const uploadFile = async () => {
     // dispatch({ type: UPLOAD_FILE });
     try {
-      console.log(file);
+      console.log(state.positionFile);
       const formData = new FormData();
-      formData.append('myFile', file);
+      formData.append('myFile', state.positionFile);
       await authFetch.post('/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -372,6 +379,7 @@ const AppProvider = ({ children }) => {
         handleSelectAdd,
         handleInputChange,
         uploadFile,
+        uploadChange,
       }}
     >
       {children}
