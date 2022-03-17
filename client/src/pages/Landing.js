@@ -10,14 +10,7 @@ export const Landing = () => {
       <Logo />
       <div className='container page'>
         <div className='info'>
-          <h1>
-            <span>JANIO</span> pirmas APP važiuojam
-          </h1>
-          <p>
-            I'm baby man bun prism jianbing hell of truffaut. Adipisicing austin
-            franzen sed do etsy aesthetic, art party brooklyn in dreamcatcher
-            tumeric aute.
-          </p>
+          <h1>Order Management System</h1>
           <Link to='/register' className='btn btn-hero'>
             Login/Register{' '}
           </Link>
