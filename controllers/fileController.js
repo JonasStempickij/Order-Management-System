@@ -7,13 +7,17 @@ import { fileURLToPath } from 'url';
 
 const uploadFile = async (req, res) => {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  console.log(__dirname);
   const sampleFile = req.files.myFile;
-  const uploadPath = __dirname + '/' + sampleFile.name;
+  const jobPositions = JSON.parse(req.body.jobPositions);
+  const uploadPath =
+    path.resolve(__dirname, '../upload') + '/' + sampleFile.name;
   sampleFile.mv(uploadPath, function (err) {
     if (err) return res.status(500).send(err);
 
-    res.status(200).send({ msg: 'File Uploaded' });
+    res.status(200).send({
+      msg: `file uploaded to ${path.resolve(uploadPath)}`,
+      jobPositions,
+    });
   });
   //   console.log(req.body);
   //   res.status(StatusCodes.ACCEPTED).json({ msg: 'FILE UPLOADED' });

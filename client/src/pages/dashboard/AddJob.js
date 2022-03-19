@@ -139,7 +139,7 @@ const AddJob = () => {
             <input
               className='file-upload'
               type='file'
-              name='fileUpload'
+              name='jobFile'
               onChange={(e) => {
                 uploadChange(e);
               }}

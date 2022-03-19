@@ -186,7 +186,7 @@ const reducer = (state, action) => {
           ],
         },
       ],
-      positionFile: null,
+      jobFile: null,
     };
     return {
       ...state,
@@ -197,14 +197,14 @@ const reducer = (state, action) => {
   if (action.type === UPLOAD_FILE) {
     return {
       ...state,
-      positionFile: action.payload.file,
+      jobFile: action.payload.file,
     };
   }
 
   if (action.type === UPLOAD_CHANGE) {
     return {
       ...state,
-      positionFile: action.payload.file,
+      jobFile: action.payload.file,
     };
   }
 

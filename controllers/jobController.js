@@ -4,18 +4,29 @@ import { BadRequestError, NotFoundError } from '../errors/index.js';
 import checkPermisions from '../utils/checkPermission.js';
 import mongoose from 'mongoose';
 import moment from 'moment';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const createJob = async (req, res) => {
-  console.log(req.body);
   const { company } = req.body;
-
+  const jobFile = req.files.jobFile;
+  const user = JSON.parse(req.body.user);
+  const createdBy = user._id;
+  const jobPositions = JSON.parse(req.body.jobPositions);
+  // console.log(req.body);
   if (!company) {
     throw new BadRequestError('Please provide all values');
   }
-  console.log(req.headers);
-  console.log(typeof req.body.jobPositions);
-  req.body.createdBy = req.user.userId;
-  const job = await Job.create(req.body);
+  console.log(
+    `CreatedBy: ${createdBy}  Company: ${company} jobPositions: ${jobPositions}`
+  );
+  const job = await Job.create({ createdBy, company, jobPositions });
+  const jobId = job._id.toString();
+  const dirname = path.dirname(fileURLToPath(import.meta.url));
+  const uploadFolder = path.resolve(dirname, '../upload/', jobId);
+  console.log(uploadFolder);
+  fs.mkdirSync(uploadFolder);
   res.status(StatusCodes.CREATED).json(job);
 };
 

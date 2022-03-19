@@ -81,7 +81,7 @@ const initialState = {
   materialOptions: ['AISI304', 'AISI316', 'AISI430', 'Juodas pl.', 'Aliuminis'],
   materialThickness: '',
   positionQuantity: '',
-  positionFile: null,
+  jobFile: null,
   jobComment: '',
 };
 
@@ -227,9 +227,12 @@ const AppProvider = ({ children }) => {
   const uploadFile = async () => {
     // dispatch({ type: UPLOAD_FILE });
     try {
-      console.log(state.positionFile);
+      const jsonArr = JSON.stringify(state.jobPositions);
+      console.log(jsonArr);
+      // console.log(state.positionFile);
       const formData = new FormData();
       formData.append('myFile', state.positionFile);
+      formData.append('jobPositions', jsonArr);
       await authFetch.post('/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -243,8 +246,17 @@ const AppProvider = ({ children }) => {
   const createJob = async () => {
     dispatch({ type: CREATE_JOB_BEGIN });
     try {
-      const { company, jobPositions } = state;
-      await authFetch.post('/jobs', { company, jobPositions });
+      const { company, jobPositions, jobFile, user } = state;
+      const formData = new FormData();
+      formData.append('user', JSON.stringify(user));
+      formData.append('company', company);
+      formData.append('jobPositions', JSON.stringify(jobPositions));
+      formData.append('jobFile', jobFile);
+      await authFetch.post('/jobs', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       dispatch({ type: CREATE_JOB_SUCCESS });
       clearValues();
     } catch (error) {
