@@ -23,4 +23,13 @@ const uploadFile = async (req, res) => {
   //   res.status(StatusCodes.ACCEPTED).json({ msg: 'FILE UPLOADED' });
 };
 
-export { uploadFile };
+const downloadFile = async (req, res) => {
+  const { id } = req.params;
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const downloadPath =
+    path.resolve(__dirname, '../upload', id) + '/CV Jonas Stempickij.pdf';
+  console.log(downloadPath);
+  res.status(200).download(downloadPath, 'test.pdf');
+};
+
+export { uploadFile, downloadFile };

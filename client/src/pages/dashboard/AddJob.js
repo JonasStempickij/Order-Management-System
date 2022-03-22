@@ -17,8 +17,8 @@ const AddJob = () => {
     createJob,
     editJob,
     jobPositions,
-    uploadFile,
     uploadChange,
+    downloadFile,
   } = useAppContext();
 
   const handleSubmit = (e) => {
@@ -52,9 +52,9 @@ const AddJob = () => {
     handleInputChange({ name, value, index });
   };
 
-  const handleUpload = (e) => {
+  const handleDownload = (e) => {
     e.preventDefault();
-    uploadFile();
+    downloadFile();
   };
 
   return (
@@ -144,8 +144,8 @@ const AddJob = () => {
                 uploadChange(e);
               }}
             />
-            <button className='btn btn-block' onClick={handleUpload}>
-              UPLOAD
+            <button className='btn btn-block' onClick={handleDownload}>
+              download
             </button>
           </div>
         </div>

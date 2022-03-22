@@ -26,7 +26,7 @@ const createJob = async (req, res) => {
   const dirname = path.dirname(fileURLToPath(import.meta.url));
   const uploadFolder = path.resolve(dirname, '../upload/', jobId);
   console.log(uploadFolder);
-  const uploadPath = uploadFolder + '/' + jobFile.name;
+  const uploadPath = uploadFolder + '/' + jobFile.name; //jobFile.name
   console.log(uploadPath);
   fs.mkdirSync(uploadFolder);
   jobFile.mv(uploadPath, (error) => {
@@ -46,7 +46,11 @@ const deleteJob = async (req, res) => {
   checkPermisions(req.user, job.createdBy);
   const dirname = path.dirname(fileURLToPath(import.meta.url));
   const uploadFolder = path.resolve(dirname, '../upload/', jobId);
-  fs.rmSync(uploadFolder, { recursive: true });
+  try {
+    fs.rmSync(uploadFolder, { recursive: true });
+  } catch (error) {
+    console.log(error);
+  }
   console.log(uploadFolder);
   await job.remove();
   res.status(StatusCodes.OK).json({ msg: 'Success! Job removed' });

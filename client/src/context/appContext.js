@@ -2,6 +2,7 @@ import React, { useReducer, useContext } from 'react';
 
 import reducer from './reducer';
 import axios from 'axios';
+import FileDownload from 'js-file-download';
 
 import {
   DISPLAY_ALERT,
@@ -243,6 +244,19 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const downloadFile = async () => {
+    try {
+      console.log('/upload/' + state.editJobId);
+      const response = await authFetch.get('/upload/' + state.editJobId, {
+        responseType: 'blob',
+      });
+      console.log(response.data);
+      FileDownload(response.data, 'test.pdf');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const createJob = async () => {
     dispatch({ type: CREATE_JOB_BEGIN });
     try {
@@ -392,6 +406,7 @@ const AppProvider = ({ children }) => {
         handleInputChange,
         uploadFile,
         uploadChange,
+        downloadFile,
       }}
     >
       {children}
