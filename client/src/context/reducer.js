@@ -31,7 +31,6 @@ import {
   HANDLE_SELECT_CHANGE,
   HANDLE_SELECT_ADD,
   HANDLE_INPUT_CHANGE,
-  UPLOAD_FILE,
   UPLOAD_CHANGE,
 } from './actions';
 
@@ -132,7 +131,6 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === HANDLE_SELECT_CHANGE) {
-    // console.log(action.payload);
     const newArray = [...state.jobPositions];
     newArray[action.payload.index].material = action.payload.value;
     return {
@@ -151,6 +149,9 @@ const reducer = (state, action) => {
     }
     if (action.payload.name === 'positionQuantity') {
       newArray[action.payload.index].positionQuantity = action.payload.value;
+    }
+    if (action.payload.name === 'positionStatus') {
+      newArray[action.payload.index].positionStatus = action.payload.value;
     }
 
     return {
@@ -184,9 +185,13 @@ const reducer = (state, action) => {
             'Juodas pl.',
             'Aliuminis',
           ],
+          materialThickness: '',
+          positionQuantity: '',
+          positionStatus: false,
         },
       ],
       jobFile: null,
+      jobFileName: '',
     };
     return {
       ...state,
@@ -194,17 +199,11 @@ const reducer = (state, action) => {
     };
   }
 
-  if (action.type === UPLOAD_FILE) {
-    return {
-      ...state,
-      jobFile: action.payload.file,
-    };
-  }
-
   if (action.type === UPLOAD_CHANGE) {
     return {
       ...state,
       jobFile: action.payload.file,
+      jobFileName: action.payload.file.name,
     };
   }
 
@@ -244,13 +243,14 @@ const reducer = (state, action) => {
 
   if (action.type === SET_EDIT_JOB) {
     const job = state.jobs.find((job) => job._id === action.payload.id);
-    const { _id, company, jobPositions } = job;
+    const { _id, company, jobPositions, jobFileName } = job;
     return {
       ...state,
       isEditing: true,
       editJobId: _id,
       company,
       jobPositions,
+      jobFileName,
     };
   }
 

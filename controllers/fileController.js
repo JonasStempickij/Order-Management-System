@@ -24,12 +24,13 @@ const uploadFile = async (req, res) => {
 };
 
 const downloadFile = async (req, res) => {
-  const { id } = req.params;
+  const { jobId, jobFileName } = req.query;
+  console.log(`sending ID: ${jobId} and jobFileName: ${jobFileName}`);
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const downloadPath =
-    path.resolve(__dirname, '../upload', id) + '/CV Jonas Stempickij.pdf';
+    path.resolve(__dirname, '../upload', jobId) + `/${jobFileName}`;
   console.log(downloadPath);
-  res.status(200).download(downloadPath, 'test.pdf');
+  res.status(200).download(downloadPath, '');
 };
 
 export { uploadFile, downloadFile };

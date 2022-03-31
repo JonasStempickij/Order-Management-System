@@ -1,6 +1,12 @@
-import { FormRow, Alert, FormRowSelect } from '../../components';
+import {
+  FormRow,
+  Alert,
+  FormRowSelect,
+  FormRowCheckbox,
+} from '../../components';
 import { useAppContext } from '../../context/appContext';
 import Wrapper from '../../assets/wrappers/DashboardFormPage';
+import { useRef } from 'react';
 
 const AddJob = () => {
   const {
@@ -8,6 +14,7 @@ const AddJob = () => {
     showAlert,
     displayAlert,
     company,
+    jobFile,
     isEditing,
     handleChange,
     handleSelectChange,
@@ -21,9 +28,11 @@ const AddJob = () => {
     downloadFile,
   } = useAppContext();
 
+  const fileInput = useRef(null);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!company) {
+    if (!company || !jobFile) {
       displayAlert();
       return;
     }
@@ -34,9 +43,16 @@ const AddJob = () => {
     createJob();
   };
 
+  const handlePositionStatus = (e, index) => {
+    const name = e.target.name;
+    const value = e.target.checked;
+    handleInputChange({ name, value, index });
+  };
+
   const handleJobInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
+
     handleChange({ name, value });
   };
 
@@ -63,9 +79,7 @@ const AddJob = () => {
         <h3>{isEditing ? 'edit job' : 'add job'}</h3>
         {showAlert && <Alert />}
         <div className='form-center'>
-          {/* Company */}
           <FormRow
-            style={{ background: 'red' }}
             type='text'
             name='company'
             value={company}
@@ -105,10 +119,17 @@ const AddJob = () => {
                   type='number'
                   index={index}
                 />
+                <FormRowCheckbox
+                  labelText='Status'
+                  name='positionStatus'
+                  checked={item.positionStatus}
+                  handleChange={handlePositionStatus}
+                  type='checkbox'
+                  index={index}
+                />
               </div>
             );
           })}
-
           <div className='btn-container'>
             <button
               type='button'
@@ -123,28 +144,32 @@ const AddJob = () => {
               onClick={handleSubmit}
               disabled={isLoading}
             >
-              submit
+              Submit
             </button>
             <button
               className='btn btn-block clear-btn'
               onClick={(e) => {
                 e.preventDefault();
+                console.log(fileInput);
+                fileInput.current.value = null;
                 clearValues();
               }}
             >
-              clear
+              Clear
             </button>
-          </div>
-          <div className='btn-container'>
             <input
               className='file-upload'
               type='file'
               name='jobFile'
+              ref={fileInput}
               onChange={(e) => {
                 uploadChange(e);
               }}
             />
-            <button className='btn btn-block' onClick={handleDownload}>
+            <button
+              className={isEditing ? 'btn btn-block' : 'hidden'}
+              onClick={handleDownload}
+            >
               download
             </button>
           </div>

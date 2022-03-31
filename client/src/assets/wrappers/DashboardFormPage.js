@@ -19,8 +19,8 @@ const Wrapper = styled.section`
   }
   .position {
     display: grid;
-    grid-template-columns: 1fr auto auto auto;
-    grid-column-gap: 10px;
+    grid-template-columns: 1fr auto auto auto auto;
+    grid-column-gap: 1rem;
   }
   .form-row {
     margin-bottom: 0;
@@ -32,7 +32,8 @@ const Wrapper = styled.section`
     margin-top: 1rem;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-column-gap: 5rem;
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
   }
   .clear-btn {
     background: var(--grey-400);
@@ -52,6 +53,8 @@ const Wrapper = styled.section`
     align-items: center;
     border-radius: var(--borderRadius);
     background-color: var(--grey-200);
+  }
+  @media (min-width: 992px) {
   }
 `;
 

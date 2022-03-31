@@ -19,6 +19,10 @@ const JobSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    jobFileName: {
+      type: String,
+      required: [true, 'Please provide file to upload'],
+    },
     createdBy: {
       type: mongoose.Types.ObjectId,
       ref: 'User',

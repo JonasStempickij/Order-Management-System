@@ -16,5 +16,18 @@ const Wrapper = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
   }
+  .position-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+  .positio-status {
+    display: block;
+  }
+  .done {
+    color: var(--green-dark);
+  }
+  .todo {
+    color: var(--red-dark);
+  }
 `;
 export default Wrapper;

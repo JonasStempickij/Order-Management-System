@@ -21,7 +21,7 @@ const JobsContainer = () => {
 
   useEffect(() => {
     getJobs();
-  }, [page, search, searchStatus, searchType, sort]);
+  }, [page, searchStatus, searchType, sort]);
   if (isLoading) {
     return <Loading center></Loading>;
   }

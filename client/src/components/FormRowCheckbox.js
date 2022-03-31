@@ -1,4 +1,11 @@
-const FormRow = ({ type, name, value, handleChange, labelText, index }) => {
+const FormRowCheckbox = ({
+  type,
+  name,
+  checked,
+  handleChange,
+  labelText,
+  index,
+}) => {
   return (
     <div className='form-row'>
       <label htmlFor={name} className='form-label'>
@@ -8,7 +15,7 @@ const FormRow = ({ type, name, value, handleChange, labelText, index }) => {
       <input
         type={type}
         name={name}
-        value={value}
+        checked={checked}
         onChange={(e) => handleChange(e, index)}
         className='form-input'
       />
@@ -16,4 +23,4 @@ const FormRow = ({ type, name, value, handleChange, labelText, index }) => {
   );
 };
 
-export default FormRow;
+export default FormRowCheckbox;

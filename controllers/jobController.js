@@ -9,25 +9,24 @@ import { fileURLToPath } from 'url';
 import fs from 'fs';
 
 const createJob = async (req, res) => {
-  const { company } = req.body;
-  const jobFile = req.files.jobFile;
   const user = JSON.parse(req.body.user);
   const createdBy = user._id;
+  const { company, jobFileName } = req.body;
   const jobPositions = JSON.parse(req.body.jobPositions);
-  // console.log(req.body);
+  const jobFile = req.files.jobFile;
   if (!company) {
     throw new BadRequestError('Please provide all values');
   }
-  console.log(
-    `CreatedBy: ${createdBy}  Company: ${company} jobPositions: ${jobPositions}`
-  );
-  const job = await Job.create({ createdBy, company, jobPositions });
+  const job = await Job.create({
+    createdBy,
+    company,
+    jobPositions,
+    jobFileName,
+  });
   const jobId = job._id.toString();
   const dirname = path.dirname(fileURLToPath(import.meta.url));
-  const uploadFolder = path.resolve(dirname, '../upload/', jobId);
-  console.log(uploadFolder);
-  const uploadPath = uploadFolder + '/' + jobFile.name; //jobFile.name
-  console.log(uploadPath);
+  const uploadFolder = path.resolve(dirname, '../upload/', jobId); // JOB ID UPLOAD FOLDER
+  const uploadPath = uploadFolder + '/' + jobFileName; // PATH TO UPLOAD WITH FILENAME
   fs.mkdirSync(uploadFolder);
   jobFile.mv(uploadPath, (error) => {
     if (error) return res.status(500).send(error);
@@ -71,7 +70,7 @@ const getAllJobs = async (req, res) => {
     queryObject.jobType = jobType;
   }
   if (search) {
-    queryObject.position = { $regex: search, $options: 'i' };
+    queryObject.company = { $regex: search, $options: 'i' };
   }
 
   // NO AWAIT
@@ -86,10 +85,10 @@ const getAllJobs = async (req, res) => {
     result = result.sort('createdAt');
   }
   if (sort === 'a-z') {
-    result = result.sort('position');
+    result = result.sort('company');
   }
   if (sort === 'z-a') {
-    result = result.sort('-position');
+    result = result.sort('-company');
   }
   const page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 10;

@@ -5,6 +5,7 @@ import Wrapper from '../assets/wrappers/SearchContainer';
 const SearchContainer = () => {
   const {
     isLoading,
+    getJobs,
     search,
     searchStatus,
     searchType,
@@ -34,12 +35,13 @@ const SearchContainer = () => {
           {/* search position */}
           <FormRow
             type='text'
+            labelText={'company'}
             name='search'
             value={search}
             handleChange={handleSearch}
           />
           {/* search by status */}
-          <FormRowSelect
+          {/* <FormRowSelect
             labelText='status'
             name='searchStatus'
             value={searchStatus}
@@ -52,13 +54,20 @@ const SearchContainer = () => {
             value={searchType}
             handleChange={handleSearch}
             list={['all', ...jobTypeOptions]}
-          />
-          <FormRowSelect
+          /> */}
+          {/* <FormRowSelect
             name='sort'
             value={sort}
             handleChange={handleSearch}
             list={sortOptions}
-          />
+          /> */}
+          <button
+            className='btn btn-block'
+            disabled={isLoading}
+            onClick={getJobs}
+          >
+            Search
+          </button>
           <button
             className='btn btn-block btn-danger'
             disabled={isLoading}

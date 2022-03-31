@@ -37,7 +37,6 @@ import {
   HANDLE_SELECT_CHANGE,
   HANDLE_SELECT_ADD,
   HANDLE_INPUT_CHANGE,
-  UPLOAD_FILE,
   UPLOAD_CHANGE,
 } from './actions';
 import { MdProductionQuantityLimits } from 'react-icons/md';
@@ -76,6 +75,7 @@ const initialState = {
       ],
       materialThickness: '',
       positionQuantity: '',
+      positionStatus: false,
     },
   ],
   material: 'AISI304',
@@ -83,7 +83,7 @@ const initialState = {
   materialThickness: '',
   positionQuantity: '',
   jobFile: null,
-  jobComment: '',
+  jobFileName: '',
 };
 
 const AppContext = React.createContext();
@@ -112,7 +112,6 @@ const AppProvider = ({ children }) => {
       return response;
     },
     (error) => {
-      // console.log(error.response);
       if (error.response.status === 401) {
         logoutUser();
       }
@@ -222,7 +221,9 @@ const AppProvider = ({ children }) => {
   const uploadChange = (e) => {
     // console.log(e.target.files[0]);
     const file = e.target.files[0];
-    dispatch({ type: UPLOAD_CHANGE, payload: { file } });
+    if (file) {
+      dispatch({ type: UPLOAD_CHANGE, payload: { file } });
+    }
   };
 
   const uploadFile = async () => {
@@ -246,12 +247,13 @@ const AppProvider = ({ children }) => {
 
   const downloadFile = async () => {
     try {
-      console.log('/upload/' + state.editJobId);
-      const response = await authFetch.get('/upload/' + state.editJobId, {
-        responseType: 'blob',
-      });
-      console.log(response.data);
-      FileDownload(response.data, 'test.pdf');
+      const response = await authFetch.get(
+        `/upload?jobId=${state.editJobId}&jobFileName=${state.jobFileName}`,
+        {
+          responseType: 'blob',
+        }
+      );
+      FileDownload(response.data, state.jobFileName);
     } catch (error) {
       console.log(error);
     }
@@ -260,12 +262,13 @@ const AppProvider = ({ children }) => {
   const createJob = async () => {
     dispatch({ type: CREATE_JOB_BEGIN });
     try {
-      const { company, jobPositions, jobFile, user } = state;
+      const { company, jobPositions, jobFile, jobFileName, user } = state;
       const formData = new FormData();
       formData.append('user', JSON.stringify(user));
       formData.append('company', company);
       formData.append('jobPositions', JSON.stringify(jobPositions));
       formData.append('jobFile', jobFile);
+      formData.append('jobFileName', jobFileName);
       await authFetch.post('/jobs', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -304,6 +307,7 @@ const AppProvider = ({ children }) => {
       logoutUser();
     }
     clearAlert();
+    clearValues();
   };
 
   const setEditJob = (id) => {
@@ -335,6 +339,7 @@ const AppProvider = ({ children }) => {
     try {
       await authFetch.delete(`/jobs/${jobId}`);
       getJobs();
+      clearValues();
     } catch (error) {
       console.log(error.response);
       logoutUser();
